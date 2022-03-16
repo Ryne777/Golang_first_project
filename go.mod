@@ -6,7 +6,12 @@ require github.com/stretchr/testify v1.7.0
 
 require (
 	github.com/BurntSushi/toml v0.3.1 // indirect
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.4 // indirect
 	github.com/joho/godotenv v1.3.0 // indirect
+	github.com/mattn/go-sqlite3 v1.14.12 // indirect
+	gorm.io/driver/sqlite v1.3.1 // indirect
+	gorm.io/gorm v1.23.2 // indirect
 	olympos.io/encoding/edn v0.0.0-20201019073823-d3554ca0b0a3 // indirect
 )
 

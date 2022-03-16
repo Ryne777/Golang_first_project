@@ -9,6 +9,7 @@ import (
 
 func main() {
 	cfg := config.GetConfig()
+
 	r := routers.SetupRouter(cfg)
 	r.Run(fmt.Sprintf(":%s", cfg.Listen.Port))
 
