@@ -14,20 +14,21 @@ type grTodoRepository struct {
 }
 
 func NewToDoRepository(db *gorm.DB) ToDoRepository {
-	return grTodoRepository{db: db}
+	return &grTodoRepository{db: db}
 }
 
 func (t grTodoRepository) GetAll() (interface{}, error) {
-	var model model.ToDo
-	err := t.db.Find(&model).Error
+	models := model.GetTodos()
+	err := t.db.Find(&models).Error
 	if err != nil {
 		return nil, err
 	}
-	return model, nil
+	return models, nil
 }
 
 func (t grTodoRepository) Create(entity interface{}) error {
-	err := t.db.Create(entity.(model.ToDo)).Error
+	m := entity.(model.ToDo)
+	err := t.db.Create(&m).Error
 	if err != nil {
 		return err
 	}
@@ -35,24 +36,20 @@ func (t grTodoRepository) Create(entity interface{}) error {
 }
 
 func (t grTodoRepository) Update(id uint, str interface{}) (interface{}, error) {
-	var model model.ToDo
-	err := t.db.Find(&model, id).Error
+	model := model.GetTodo()
+	err := t.db.Find(model, id).Error
 	if err != nil {
 		return nil, err
 	}
-	err = t.db.Save(&model).Error
+	err = t.db.Save(model).Error
 	if err != nil {
 		return nil, err
 	}
 	return model, nil
 }
 func (t grTodoRepository) Delete(id uint) error {
-	var model model.ToDo
-	err := t.db.Find(&model, id).Error
-	if err != nil {
-		return err
-	}
-	err = t.db.Delete(&model).Error
+	model := model.GetTodo()
+	err := t.db.Delete(model, id).Error
 	if err != nil {
 		return err
 	}
