@@ -2,7 +2,6 @@ package controller
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/Ryne777/Golang_first_project/internal/model"
 	"github.com/Ryne777/Golang_first_project/internal/repository"
@@ -54,11 +53,8 @@ func (c *controller) Create(g *gin.Context) {
 
 // Delete implements ToDoController
 func (c *controller) Delete(g *gin.Context) {
-	id, err := strconv.ParseUint(g.Param("id"), 10, 64)
-	if err != nil {
-		g.JSON(http.StatusNotFound, err)
-	}
-	err = c.repository.Delete(uint(id))
+	id := g.Param("id")
+	err := c.repository.Delete(id)
 	if err != nil {
 		g.JSON(http.StatusInternalServerError, err)
 	}
@@ -76,10 +72,36 @@ func (c *controller) GetAll(g *gin.Context) {
 
 // GetOne implements ToDoController
 func (c *controller) GetOne(g *gin.Context) {
-	panic("unimplemented")
+	id := g.Param("id")
+	data, err := c.repository.GetOneById(id)
+	if err != nil {
+		g.JSON(http.StatusInternalServerError, err)
+	}
+	g.JSON(http.StatusOK, data)
+
 }
 
 // Update implements ToDoController
-func (*controller) Update(c *gin.Context) {
-	panic("unimplemented")
+func (c *controller) Update(g *gin.Context) {
+	id := g.Param("id")
+	input := model.GetTodo()
+	err := g.ShouldBindJSON(input)
+	if err != nil {
+		g.JSON(http.StatusInternalServerError, err)
+	}
+	data, err := c.repository.GetOneById(id)
+
+	todo := data.(*model.ToDo)
+	todo.ToDo = input.ToDo
+	todo.Failed = input.Failed
+	todo.Finished = input.Finished
+	if err != nil {
+		g.JSON(http.StatusInternalServerError, err)
+	}
+	todo.ToDo = input.ToDo
+	data, err = c.repository.Update(*todo)
+	if err != nil {
+		g.JSON(http.StatusInternalServerError, err)
+	}
+	g.JSON(http.StatusOK, data)
 }

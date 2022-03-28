@@ -17,6 +17,15 @@ func NewToDoRepository(db *gorm.DB) ToDoRepository {
 	return &grTodoRepository{db: db}
 }
 
+// GetOneById implements ToDoRepository
+func (t *grTodoRepository) GetOneById(id interface{}) (interface{}, error) {
+	model := model.GetTodo()
+	err := t.db.Find(&model, id).Error
+	if err != nil {
+		return nil, err
+	}
+	return model, nil
+}
 func (t grTodoRepository) GetAll() (interface{}, error) {
 	models := model.GetTodos()
 	err := t.db.Find(&models).Error
@@ -35,19 +44,16 @@ func (t grTodoRepository) Create(entity interface{}) error {
 	return nil
 }
 
-func (t grTodoRepository) Update(id uint, str interface{}) (interface{}, error) {
-	model := model.GetTodo()
-	err := t.db.Find(model, id).Error
-	if err != nil {
-		return nil, err
-	}
-	err = t.db.Save(model).Error
+func (t grTodoRepository) Update(obj interface{}) (interface{}, error) {
+	model := obj.(model.ToDo)
+
+	err := t.db.Save(&model).Error
 	if err != nil {
 		return nil, err
 	}
 	return model, nil
 }
-func (t grTodoRepository) Delete(id uint) error {
+func (t grTodoRepository) Delete(id interface{}) error {
 	model := model.GetTodo()
 	err := t.db.Delete(model, id).Error
 	if err != nil {

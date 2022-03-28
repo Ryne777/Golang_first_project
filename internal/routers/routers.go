@@ -19,6 +19,8 @@ func SetupRouter(cfg *config.Config, cnt controller.ToDoController) *gin.Engine 
 		api.GET("/", cnt.GetAll)
 		api.DELETE("/:id", cnt.Delete)
 		api.POST("/", cnt.Create)
+		api.GET("/:id", cnt.GetOne)
+		api.PUT("/:id", cnt.Update)
 
 	}
 
