@@ -7,6 +7,7 @@ type ToDo struct {
 	ToDo     string `json:"todo"`
 	Finished bool   `json:"finished"`
 	Failed   bool   `json:"failed"`
+	AuthorID uint   `json:"author_id"`
 }
 
 func GetTodos() *[]ToDo {

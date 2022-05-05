@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var _ ToDoController = &controller{}
+var _ ToDoController = &todoController{}
 
 //TODO : add new abstraction like service
 type ToDoController interface {
@@ -20,18 +20,18 @@ type ToDoController interface {
 	Delete(g *gin.Context)
 }
 
-type controller struct {
+type todoController struct {
 	repository repository.ToDoRepository
 }
 
 func NewToDoController(db *gorm.DB) ToDoController {
-	return &controller{
+	return &todoController{
 		repository: repository.NewToDoRepository(db),
 	}
 }
 
 // Create implements ToDoController
-func (c *controller) Create(g *gin.Context) {
+func (c *todoController) Create(g *gin.Context) {
 	input := model.GetTodo()
 	err := g.ShouldBindJSON(input)
 	if err != nil {
@@ -52,7 +52,7 @@ func (c *controller) Create(g *gin.Context) {
 }
 
 // Delete implements ToDoController
-func (c *controller) Delete(g *gin.Context) {
+func (c *todoController) Delete(g *gin.Context) {
 	id := g.Param("id")
 	err := c.repository.Delete(id)
 	if err != nil {
@@ -62,7 +62,7 @@ func (c *controller) Delete(g *gin.Context) {
 }
 
 // GetAll implements ToDoController
-func (c *controller) GetAll(g *gin.Context) {
+func (c *todoController) GetAll(g *gin.Context) {
 	data, err := c.repository.GetAll()
 	if err != nil {
 		g.JSON(http.StatusInternalServerError, err)
@@ -71,7 +71,7 @@ func (c *controller) GetAll(g *gin.Context) {
 }
 
 // GetOne implements ToDoController
-func (c *controller) GetOne(g *gin.Context) {
+func (c *todoController) GetOne(g *gin.Context) {
 	id := g.Param("id")
 	data, err := c.repository.GetOneById(id)
 	if err != nil {
@@ -82,7 +82,7 @@ func (c *controller) GetOne(g *gin.Context) {
 }
 
 // Update implements ToDoController
-func (c *controller) Update(g *gin.Context) {
+func (c *todoController) Update(g *gin.Context) {
 	id := g.Param("id")
 	input := model.GetTodo()
 	err := g.ShouldBindJSON(input)

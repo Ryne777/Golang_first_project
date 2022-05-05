@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetupRouter(cfg *config.Config, cnt controller.ToDoController) *gin.Engine {
+func SetupRouter(cfg *config.Config, cnt controller.ToDoController, cnt2 controller.AuthorController) *gin.Engine {
 	if !*cfg.IsDebug {
 		gin.SetMode(gin.ReleaseMode)
 	}
@@ -14,15 +14,19 @@ func SetupRouter(cfg *config.Config, cnt controller.ToDoController) *gin.Engine 
 	r := gin.Default()
 
 	//TODO add routers in this group
-	api := r.Group("/api")
+	todo := r.Group("/api/todo")
 	{
-		api.GET("/", cnt.GetAll)
-		api.DELETE("/:id", cnt.Delete)
-		api.POST("/", cnt.Create)
-		api.GET("/:id", cnt.GetOne)
-		api.PUT("/:id", cnt.Update)
+		todo.GET("/", cnt.GetAll)
+		todo.DELETE("/:id", cnt.Delete)
+		todo.POST("/", cnt.Create)
+		todo.GET("/:id", cnt.GetOne)
+		todo.PUT("/:id", cnt.Update)
 
 	}
-
+	author := r.Group("/api/author")
+	{
+		author.GET("/:id", cnt2.GetOne)
+		author.POST("/", cnt2.Create)
+	}
 	return r
 }

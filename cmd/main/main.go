@@ -13,9 +13,10 @@ import (
 func main() {
 	cfg := config.GetConfig()
 	db := bdClient.GetConnectionDb(cfg)
-	db.AutoMigrate(&model.ToDo{})
+	db.AutoMigrate(&model.ToDo{}, &model.Author{})
 	cnt := controller.NewToDoController(db)
-	r := routers.SetupRouter(cfg, cnt)
+	cnt2 := controller.NewAuthorController(db)
+	r := routers.SetupRouter(cfg, cnt, cnt2)
 	r.Run(fmt.Sprintf(":%s", cfg.Listen.Port))
 
 }
